@@ -1,0 +1,1 @@
+export type TictactoeGrid = Array<Array<number>>
