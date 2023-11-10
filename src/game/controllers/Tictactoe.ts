@@ -36,6 +36,22 @@ export default class Tictactoe {
         this._grid = grid;
     }
 
+    public getCell(row: number, col: number): number {
+        const selectedRow: number[] | undefined = this._grid[row]
+    
+        if (selectedRow === undefined)
+            throw new InvalidGridError("Unexpected row format");
+
+        const cellValue: any = selectedRow[col];
+    
+        if (typeof cellValue !== "number")
+            throw new InvalidGridError("Unexpected cell type");
+        else if (cellValue < 0 || cellValue > 2)
+            throw new InvalidGridError("Unexpected cell value")
+
+        return cellValue;
+    }
+
     public getWinner(): number {
         type PositionAndDirectionCheck = {
             position: CellPosition;
