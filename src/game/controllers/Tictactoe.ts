@@ -122,7 +122,7 @@ export default class Tictactoe {
     }
 
     private _checkWinnerByPos(position: CellPosition, direction: number = -1): number {
-        const value: number = this._grid[position.row]![position.col]!;  // todo: create a getAt() method
+        const value: number = this.getCell(position.row, position.col);
         const neighbors: NeighborsArray = this._listCellNeighbors(position.row, position.col)
 
         let neighborPosition: CellPosition | None;
@@ -134,7 +134,7 @@ export default class Tictactoe {
                 if (neighborPosition === null)
                     continue;
 
-                neighborValue = this._grid[neighborPosition.row]![neighborPosition.col]!;  // todo: create a getAt() method
+                neighborValue = this.getCell(neighborPosition.row, neighborPosition.col);
             
                 if (value === neighborValue)
                     return this._checkWinnerByPos(neighborPosition, nextDirection);
@@ -149,7 +149,7 @@ export default class Tictactoe {
             if (neighborPosition === null)  // this means that it already reached the end of the board
                 return value;
 
-            neighborValue = this._grid[neighborPosition.row]![neighborPosition.col]!;  // todo: create a getAt() method
+            neighborValue = this.getCell(neighborPosition.row, neighborPosition.col);
 
             if (value === neighborValue)
                 return this._checkWinnerByPos(neighborPosition, direction);
