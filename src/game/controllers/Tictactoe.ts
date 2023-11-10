@@ -29,6 +29,31 @@ export default class Tictactoe {
         this._grid = grid;
     }
 
+    public getWinner(): number {
+        const analizeCells: Array<{ position: ICellPos, standardDirection: number }> = [
+            { position: { row: 0, col: 0 }, standardDirection: -1 },
+            { position: { row: 0, col: 1 }, standardDirection:  6 },
+            { position: { row: 0, col: 2 }, standardDirection: -1 },
+            { position: { row: 1, col: 0 }, standardDirection:  4 },
+            { position: { row: 2, col: 2 }, standardDirection: -1 },
+        ];
+
+        let currentCell: { position: ICellPos, standardDirection: number };
+        let winner: number = 0;
+
+        for (currentCell of analizeCells) {
+            const result: number =
+                this._checkWinnerByPos(currentCell.position, currentCell.standardDirection);
+
+            if (winner !== 0 && result !== 0)
+                throw new WinnerAnalizeError("Invalid board configuration");
+                
+            winner = result;
+        }
+
+        return winner;
+    }
+
     private _validateGridSize(grid: TictactoeGrid): void {
         if (grid.length !== 3)
             throw new InvalidGridError("Grid size missmatch");
