@@ -1,4 +1,3 @@
-import { ICellPos } from "../models/Interfaces";
 import { TictactoeGrid } from "../models/Types";
 
 class InvalidGridError extends Error {
@@ -8,12 +7,20 @@ class InvalidGridError extends Error {
     }
 }
 
-class WinnerAnalizeError extends Error {
+class WinnerAnalizerError extends Error {
     constructor (msg: string) {
         super(msg);
         this.name = "WinnerAnalizeError";
     }
 }
+
+type NeighborsArray = Array<CellPosition | null>;
+type None = null | undefined;
+
+type CellPosition = {
+    row: number;
+    col: number;
+};
 
 export default class Tictactoe {
     private _grid: number[][] = new Array(3)
@@ -30,23 +37,28 @@ export default class Tictactoe {
     }
 
     public getWinner(): number {
-        const analizeCells: Array<{ position: ICellPos, standardDirection: number }> = [
-            { position: { row: 0, col: 0 }, standardDirection: -1 },
-            { position: { row: 0, col: 1 }, standardDirection:  6 },
-            { position: { row: 0, col: 2 }, standardDirection: -1 },
-            { position: { row: 1, col: 0 }, standardDirection:  4 },
-            { position: { row: 2, col: 2 }, standardDirection: -1 },
+        type PositionAndDirectionCheck = {
+            position: CellPosition;
+            direction: number;
+        };
+
+        const analizeCells: PositionAndDirectionCheck[] = [
+            { position: { row: 0, col: 0 }, direction: -1 },
+            { position: { row: 0, col: 1 }, direction:  6 },
+            { position: { row: 0, col: 2 }, direction: -1 },
+            { position: { row: 1, col: 0 }, direction:  4 },
+            { position: { row: 2, col: 2 }, direction: -1 },
         ];
 
-        let currentCell: { position: ICellPos, standardDirection: number };
+        let currentCell: PositionAndDirectionCheck
         let winner: number = 0;
 
         for (currentCell of analizeCells) {
             const result: number =
-                this._checkWinnerByPos(currentCell.position, currentCell.standardDirection);
+                this._checkWinnerByPos(currentCell.position, currentCell.direction);
 
             if (winner !== 0 && result !== 0)
-                throw new WinnerAnalizeError("Invalid board configuration");
+                throw new WinnerAnalizerError("Invalid board configuration");
                 
             winner = result;
         }
@@ -61,7 +73,7 @@ export default class Tictactoe {
         grid.forEach((row: number[]) => {
             if (row.length !== 3)
                 throw new InvalidGridError("Grid size missmatch");
-        })
+        });
     }
 
     private _validateGridValues(grid: TictactoeGrid): void {
@@ -74,11 +86,11 @@ export default class Tictactoe {
                     throw new InvalidGridError("Invalid values asigned");
     }
 
-    private _listCellNeighbors(row: number, col: number): Array<ICellPos | null> {
+    private _listCellNeighbors(row: number, col: number): NeighborsArray {
         const isValueValid = (val: number) =>
             val >= 0 && val < 3;
 
-        const neighbors: ICellPos[] = [
+        const neighbors: CellPosition[] = [
             { row: row - 1, col: col - 1 },
             { row: row - 1, col: col     },
             { row: row - 1, col: col + 1 },
@@ -89,15 +101,15 @@ export default class Tictactoe {
             { row: row + 1, col: col + 1 },
         ];
 
-        return neighbors.map((pos: ICellPos) =>
+        return neighbors.map((pos: CellPosition) =>
             isValueValid(pos.row) && isValueValid(pos.col) ?  pos : null);
     }
 
-    private _checkWinnerByPos(position: ICellPos, direction: number = -1): number {
+    private _checkWinnerByPos(position: CellPosition, direction: number = -1): number {
         const value: number = this._grid[position.row]![position.col]!;  // todo: create a getAt() method
-        const neighbors: Array<ICellPos | null> = this._listCellNeighbors(position.row, position.col)
+        const neighbors: NeighborsArray = this._listCellNeighbors(position.row, position.col)
 
-        let neighborPosition: ICellPos | null | undefined;
+        let neighborPosition: CellPosition | None;
         let neighborValue: number;
         let nextDirection: number;  // in fact, this is the neighbor's index
 
