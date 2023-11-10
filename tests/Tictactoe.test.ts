@@ -48,3 +48,19 @@ test("Writing an invalid grid to the board object", () => {
             .toThrow("Invalid values asigned");
     });
 });
+
+test("Getting the winner given the current grid state", () => {
+    const tictactoe: ITictactoe = new Tictactoe();
+
+    tictactoe.setGrid([[0, 1, 2],
+                       [0, 1, 2],
+                       [0, 1, 2]]);
+
+    expect(() => tictactoe.getWinner()).toThrow("Invalid board configuration");
+
+    tictactoe.setGrid([[1, 0, 2],
+                       [1, 1, 2],
+                       [1, 0, 0]]);
+
+    expect(tictactoe.getWinner()).toBe(0);
+});
