@@ -120,24 +120,27 @@ export default class Tictactoe {
 
                 neighborValue = this._grid[neighborPosition.row]![neighborPosition.col]!;  // todo: create a getAt() method
             
-                if (value === neighborValue) {
+                if (value === neighborValue)
                     return this._checkWinnerByPos(neighborPosition, nextDirection);
-                }
             }
 
         } else if (direction >= 0 && direction < 8) {  // when it's the seccond or the third movement
-            neighborPosition = neighbors[direction]!;  // todo: verify if this value is not null or undefined
+            neighborPosition = neighbors[direction];
+
+            if (neighborPosition === undefined)
+                throw new WinnerAnalizerError("Undefined neighbor position");
 
             if (neighborPosition === null)  // this means that it already reached the end of the board
                 return value;
 
             neighborValue = this._grid[neighborPosition.row]![neighborPosition.col]!;  // todo: create a getAt() method
 
-            if (value === neighborValue) {
+            if (value === neighborValue)
                 return this._checkWinnerByPos(neighborPosition, direction);
-            }
 
-        } // todo: throw an error if the direction is invalid
+        } else {
+            throw new WinnerAnalizerError("Invalid direction");
+        }
 
         return 0;
     }
