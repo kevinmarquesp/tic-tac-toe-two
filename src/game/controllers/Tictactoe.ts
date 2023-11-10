@@ -1,3 +1,4 @@
+import { ICellPos } from "../models/Interfaces";
 import { TictactoeGrid } from "../models/Types";
 
 class InvalidGridError extends Error {
@@ -46,5 +47,61 @@ export default class Tictactoe {
             for (const val of row)
                 if (!isValueValid(val))
                     throw new InvalidGridError("Invalid values asigned");
+    }
+
+    private _listCellNeighbors(row: number, col: number): Array<ICellPos | null> {
+        const isValueValid = (val: number) =>
+            val >= 0 && val < 3;
+
+        const neighbors: ICellPos[] = [
+            { row: row - 1, col: col - 1 },
+            { row: row - 1, col: col     },
+            { row: row - 1, col: col + 1 },
+            { row: row,     col: col - 1 },
+            { row: row,     col: col + 1 },
+            { row: row + 1, col: col - 1 },
+            { row: row + 1, col: col     },
+            { row: row + 1, col: col + 1 },
+        ];
+
+        return neighbors.map((pos: ICellPos) =>
+            isValueValid(pos.row) && isValueValid(pos.col) ?  pos : null);
+    }
+
+    private _checkWinnerByPos(position: ICellPos, direction: number = -1): number {
+        const value: number = this._grid[position.row]![position.col]!;  // todo: create a getAt() method
+        const neighbors: Array<ICellPos | null> = this._listCellNeighbors(position.row, position.col)
+
+        let neighborPosition: ICellPos | null | undefined;
+        let neighborValue: number;
+        let nextDirection: number;  // in fact, this is the neighbor's index
+
+        if (direction < 0) {  // -1 means that it's the begining of the algorithm
+            for ([nextDirection, neighborPosition] of neighbors.entries()) {
+                if (neighborPosition === null)
+                    continue;
+
+                neighborValue = this._grid[neighborPosition.row]![neighborPosition.col]!;  // todo: create a getAt() method
+            
+                if (value === neighborValue) {
+                    return this._checkWinnerByPos(neighborPosition, nextDirection);
+                }
+            }
+
+        } else if (direction >= 0 && direction < 8) {  // when it's the seccond or the third movement
+            neighborPosition = neighbors[direction]!;  // todo: verify if this value is not null or undefined
+
+            if (neighborPosition === null)  // this means that it already reached the end of the board
+                return value;
+
+            neighborValue = this._grid[neighborPosition.row]![neighborPosition.col]!;  // todo: create a getAt() method
+
+            if (value === neighborValue) {
+                return this._checkWinnerByPos(neighborPosition, direction);
+            }
+
+        } // todo: throw an error if the direction is invalid
+
+        return 0;
     }
 }
