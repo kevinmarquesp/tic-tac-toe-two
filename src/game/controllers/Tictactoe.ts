@@ -7,6 +7,13 @@ class InvalidGridError extends Error {
     }
 }
 
+class WinnerAnalizeError extends Error {
+    constructor (msg: string) {
+        super(msg);
+        this.name = "WinnerAnalizeError";
+    }
+}
+
 export default class Tictactoe {
     private _grid: number[][] = new Array(3)
         .fill(new Array(3).fill(0));
