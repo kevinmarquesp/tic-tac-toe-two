@@ -1,16 +1,4 @@
-class InvalidGridError extends Error {
-    constructor (msg: string) {
-        super(msg);
-        this.name = "InvalidGridError";
-    }
-}
-
-class WinnerAnalizerError extends Error {
-    constructor (msg: string) {
-        super(msg);
-        this.name = "WinnerAnalizeError";
-    }
-}
+import { InvalidGridError, WinnerAnalizerError } from "../errors/Tictactoe";
 
 type NeighborsArray = Array<CellPosition | null>;
 type None = null | undefined;
