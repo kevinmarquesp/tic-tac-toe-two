@@ -13,12 +13,15 @@ type TictactoeProps = {
     grid: number[][];
 };
 
+const ROWS: number = 3;
+const COLS: number = 3;
+
 export default class TictactoeController {
     private props: TictactoeProps;
 
     constructor () {
         this.props = {
-            grid: new Array(3).fill(new Array(3).fill(0)),
+            grid: new Array(ROWS).fill(new Array(COLS).fill(0)),
         };
     }
 
@@ -65,7 +68,8 @@ export default class TictactoeController {
                 this.checkWinnerByPos(currentCellData.position, currentCellData.direction);
 
             if (winner !== 0 && result !== 0)
-                throw new WinnerAnalizerError("Invalid board configuration");
+                throw new WinnerAnalizerError(ErrorsDictionary.Tictactoe
+                    .WinnerAnalizerError.INVALID_GRID_FORMATION);
                 
             winner = result;
         }

@@ -13,6 +13,7 @@ const ErrorsDictionary = {
             INVALID_BOARD_CONFIGURATION: "Invalid board configuration",
             UNDEFINED_NEIGHBOR_POSITION: "Undefined neighbor position",
             INVALID_DIRECTION: "Invalid direction",
+            INVALID_GRID_FORMATION: "Invalid grid formation",
         },
     },
 };
