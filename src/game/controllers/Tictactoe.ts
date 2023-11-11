@@ -1,5 +1,3 @@
-import { TictactoeGrid } from "../models/Types";
-
 class InvalidGridError extends Error {
     constructor (msg: string) {
         super(msg);
@@ -30,7 +28,7 @@ export default class Tictactoe {
         return this._grid;
     }
 
-    public setGrid(grid: TictactoeGrid): void {
+    public setGrid(grid: number[][]): void {
         this._validateGridSize(grid);
         this._validateGridValues(grid);
         this._grid = grid;
@@ -47,7 +45,7 @@ export default class Tictactoe {
         if (typeof cellValue !== "number")
             throw new InvalidGridError("Unexpected cell type");
         else if (cellValue < 0 || cellValue > 2)
-            throw new InvalidGridError("Unexpected cell value")
+            throw new InvalidGridError("Unexpected cell value");
 
         return cellValue;
     }
@@ -82,7 +80,7 @@ export default class Tictactoe {
         return winner;
     }
 
-    private _validateGridSize(grid: TictactoeGrid): void {
+    private _validateGridSize(grid: number[][]): void {
         if (grid.length !== 3)
             throw new InvalidGridError("Grid size missmatch");
 
@@ -92,7 +90,7 @@ export default class Tictactoe {
         });
     }
 
-    private _validateGridValues(grid: TictactoeGrid): void {
+    private _validateGridValues(grid: number[][]): void {
         const isValueValid = (val: number) =>
             typeof val === "number" && val >= 0 && val < 3;
 

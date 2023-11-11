@@ -1,12 +1,5 @@
-import { TictactoeGrid } from "./Types";
-
 export interface ITictactoe {
-    getGrid(): TictactoeGrid
-    setGrid(grid: TictactoeGrid): void
+    getGrid(): number[][]
+    setGrid(grid: number[][]): void
     getWinner(): number
-}
-
-export interface ICellPos {
-    row: number
-    col: number
 }

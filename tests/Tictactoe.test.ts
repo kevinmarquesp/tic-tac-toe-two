@@ -1,10 +1,9 @@
 import Tictactoe from "../src/game/controllers/Tictactoe";
 import { ITictactoe } from "../src/game/models/Interfaces";
-import { TictactoeGrid } from "../src/game/models/Types";
 
 test("Counting the grid elements", () => {
     const tictactoe: ITictactoe = new Tictactoe();
-    const grid: TictactoeGrid = tictactoe.getGrid();
+    const grid: number[][] = tictactoe.getGrid();
 
     expect(grid.length).toBe(3);
 
@@ -22,7 +21,7 @@ test("Writing a new grid to the board object", () => {
     tictactoe.setGrid(new Array(3)
         .fill(new Array(3).fill(1)));
 
-    const grid: TictactoeGrid = tictactoe.getGrid();
+    const grid: number[][] = tictactoe.getGrid();
 
     grid.forEach((row: number[]) =>
         row.forEach((val: number) => 
