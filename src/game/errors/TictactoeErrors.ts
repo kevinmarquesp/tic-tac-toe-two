@@ -5,6 +5,13 @@ export class InvalidGridError extends Error {
     }
 }
 
+export class InvalidGridValueError extends Error {
+    constructor (msg: string) {
+        super(msg);
+        this.name = "InvalidGridValueError";
+    }
+}
+
 export class WinnerAnalizerError extends Error {
     constructor (msg: string) {
         super(msg);

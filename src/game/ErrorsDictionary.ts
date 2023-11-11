@@ -1,11 +1,13 @@
 const ErrorsDictionary = {
     Tictactoe: {
         InvalidGridError: {
-            UNEXPECTED_ROW_FORMAT: "Unexpected row format",
-            UNEXPECTED_CELL_TYPE: "Unexpected cell type",
-            UNEXPECTED_CELL_VALUE: "Unexpected cell value",
-            GRID_SIZE_MISSMATCH: "Grid size missmatch",
-            INVALID_VALUES_ASIGNED: "Invalid values asigned",
+            GRID_ROWS_AMOUNT_MISSMATCH: "Grid rows ammount missmatch",
+            ROW_TYPE_MISSMATCH: "Row type missmatch",
+            ROW_SIZE_MISSMATCH: "Row size missmatch",
+        },
+        InvalidGridValueError: {
+            GRID_VALUES_TYPE_MISSMATCH: "Grid values type missmatch",
+            GRID_VALUES_OUT_OF_RANGE: "Grid values out of range",
         },
         WinnerAnalizerError: {
             INVALID_BOARD_CONFIGURATION: "Invalid board configuration",
