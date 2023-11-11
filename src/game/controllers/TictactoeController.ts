@@ -8,22 +8,31 @@ type CellPosition = {
     col: number;
 };
 
+interface TictactoeProps {
+    grid: number[][];
+};
+
 export default class TictactoeController {
-    private _grid: number[][] = new Array(3)
-        .fill(new Array(3).fill(0));
+    private props: TictactoeProps;
+
+    constructor () {
+        this.props = {
+            grid: new Array(3).fill(new Array(3).fill(0)),
+        };
+    }
 
     public getGrid(): number[][] {
-        return this._grid;
+        return this.props.grid;
     }
 
     public setGrid(grid: number[][]): void {
         this._validateGridSize(grid);
         this._validateGridValues(grid);
-        this._grid = grid;
+        this.props.grid = grid;
     }
 
     public getCell(row: number, col: number): number {
-        const selectedRow: number[] | undefined = this._grid[row]
+        const selectedRow: number[] | undefined = this.props.grid[row]
     
         if (selectedRow === undefined)
             throw new InvalidGridError("Unexpected row format");
