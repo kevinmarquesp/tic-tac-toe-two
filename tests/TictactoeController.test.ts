@@ -1,65 +1,125 @@
+import ErrorsDictionary from "../src/game/ErrorsDictionary";
 import TictactoeController from "../src/game/controllers/TictactoeController";
-import { Tictactoe } from "../src/game/models/Tictactoe";
+import { InvalidGridError, InvalidGridValueError } from "../src/game/errors/TictactoeErrors";
+import Tictactoe from "../src/game/models/Tictactoe";
 
-test("Counting the grid elements", () => {
+describe("Default behavior and states of the TictactoeController object", () => {
+    const ROWS: number = 3;
+    const COLS: number = 3;
+
     const tictactoe: Tictactoe = new TictactoeController();
     const grid: number[][] = tictactoe.getGrid();
 
-    expect(grid.length).toBe(3);
+    it("Should give a 3x3 two dimentional array", () => {
+        expect(grid.length).toBe(ROWS);
+        
+        grid.forEach((currentRow: number[]) => {
+            expect(currentRow.length).toBe(COLS);
+        });
+    });
 
-    grid.forEach((row: number[]) => {
-        expect(row.length).toBe(3);
-
-        row.forEach((val: number) => 
-            expect(val).toBe(0));
+    it("Should be an empty grid with all values setted to 0", () => {
+        grid.forEach((currentRow: number[]) => {
+            currentRow.forEach((cellValue: number) => {
+                expect(cellValue).toBe(0);
+            });
+        });
     });
 });
 
-test("Writing a new grid to the board object", () => {
+describe("What happens when asigning a new tictactoe board array", () => {
+    type BoardTestCase = {
+        grid: any[][];
+        error: string | null;
+    };
+
+    const ExpectedErrors = {
+        GRID_ROWS_AMOUNT_MISSMATCH: ErrorsDictionary.Tictactoe.InvalidGridError.GRID_ROWS_AMOUNT_MISSMATCH,
+        ROW_SIZE_MISSMATCH:         ErrorsDictionary.Tictactoe.InvalidGridError.ROW_SIZE_MISSMATCH,
+        GRID_VALUES_OUT_OF_RANGE:   ErrorsDictionary.Tictactoe.InvalidGridValueError.GRID_VALUES_OUT_OF_RANGE,
+        GRID_VALUES_TYPE_MISSMATCH: ErrorsDictionary.Tictactoe.InvalidGridValueError.GRID_VALUES_TYPE_MISSMATCH,
+    }
+
+    const ValidBoardCases: BoardTestCase[] = [
+        { grid: [[1, 0, 0], [1, 0, 0], [1, 0, 0]], error: null },
+        { grid: [[2, 0, 2], [1, 2, 2], [0, 0, 2]], error: null },
+    ];
+
+    const OutOfRangeBoardCases: BoardTestCase[] = [
+        { grid: [[1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0]],         error: ExpectedErrors.ROW_SIZE_MISSMATCH },
+        { grid: [[1, 0],       [1, 0, 0],    [1, 0, 0]],            error: ExpectedErrors.ROW_SIZE_MISSMATCH },
+        { grid: [[1, 0, 0],    [1, 0, 0],    [1, 0, 0, 0]],         error: ExpectedErrors.ROW_SIZE_MISSMATCH },
+        { grid: [[1, 0, 0],    [1, 0, 0],    [1, 0, 0], [0, 0, 0]], error: ExpectedErrors.GRID_ROWS_AMOUNT_MISSMATCH },
+        { grid: [[1, 0, 0],    [0, 0, 0]],                          error: ExpectedErrors.GRID_ROWS_AMOUNT_MISSMATCH },
+        { grid: [[1, 0, 0],    [0, 0]],                             error: ExpectedErrors.GRID_ROWS_AMOUNT_MISSMATCH },
+    ];
+
+    const InvalidValuesBoardCases: BoardTestCase[] = [
+        { grid: [[-1, 0, 0],   [1, 0, 0],   [1, 0, -5]],        error: ExpectedErrors.GRID_VALUES_OUT_OF_RANGE },
+        { grid: [[2, 0, 2],    [1, 3, 2],   [0, 0, 2]],         error: ExpectedErrors.GRID_VALUES_OUT_OF_RANGE },
+        { grid: [[null, 0, 2], [1, 3, 2],   [0, 0, 2]],         error: ExpectedErrors.GRID_VALUES_TYPE_MISSMATCH },
+        { grid: [[1, 0, 2],    [1, 0, "x"], [0, 0, 2]],         error: ExpectedErrors.GRID_VALUES_TYPE_MISSMATCH },
+        { grid: [[1, 0, 2],    [1, 1, 0],   [0, 0, undefined]], error: ExpectedErrors.GRID_VALUES_TYPE_MISSMATCH },
+    ];
+
     const tictactoe: Tictactoe = new TictactoeController();
 
-    tictactoe.setGrid(new Array(3)
-        .fill(new Array(3).fill(1)));
-
-    const grid: number[][] = tictactoe.getGrid();
-
-    grid.forEach((row: number[]) =>
-        row.forEach((val: number) => 
-            expect(val).toBe(1)));
-});
-
-test("Writing an invalid grid to the board object", () => {
-    const tictactoe: Tictactoe = new TictactoeController();
-
-    [1, 2, 4].forEach((i: number) => {
-        expect(() => tictactoe.setGrid(new Array(3)
-                .fill(new Array(i).fill(0))))
-            .toThrow("Grid size missmatch");
-
-        expect(() => tictactoe.setGrid(new Array(i)
-                .fill(new Array(3).fill(0))))
-            .toThrow("Grid size missmatch");
+    it("Shuold asign the new board setup to the TictactoeController object", () => {
+        ValidBoardCases.forEach((currentBoardTestCase: BoardTestCase) => {
+            tictactoe.setGrid(currentBoardTestCase.grid);
+            
+            expect(currentBoardTestCase.error).toBe(null);
+            expect(tictactoe.getGrid()).toBe(currentBoardTestCase.grid);
+        });
     });
 
-    [-1, 3, 4].forEach((i: number) => {
-        expect(() => tictactoe.setGrid(new Array(3)
-                .fill(new Array(3).fill(i))))
-            .toThrow("Invalid values asigned");
+    it("Should throw an error for grids with more than 3 rows or columns", () => {
+        OutOfRangeBoardCases.forEach((currentBoardTestCase: BoardTestCase) => {
+            expect(typeof currentBoardTestCase.error).toBe("string");
+
+            expect(() => tictactoe.setGrid(currentBoardTestCase.grid))
+                .toThrow(currentBoardTestCase.error!);
+
+            expect(() => tictactoe.setGrid(currentBoardTestCase.grid))
+                .toThrow(InvalidGridError);
+        });
+    });
+
+    it("Should throw an error for grids with not having number, or number less than 0 or greater than 2", () => {
+        InvalidValuesBoardCases.forEach((currentBoardTestCase: BoardTestCase) => {
+            expect(typeof currentBoardTestCase.error).toBe("string");
+            
+            expect(() => tictactoe.setGrid(currentBoardTestCase.grid))
+                .toThrow(currentBoardTestCase.error!);
+            
+            expect(() => tictactoe.setGrid(currentBoardTestCase.grid))
+                .toThrow(InvalidGridValueError);
+        });
     });
 });
 
-test("Getting the winner given the current grid state", () => {
+describe("The current winner based on the internal grid values and positions", () => {
+    type WinnerAnilizerCase = {
+        grid: number[][];
+        winner: number;
+        error: string | null;
+    };
+
+    const ValidCases: WinnerAnilizerCase[] = [
+        { grid: [[0, 0, 0], [0, 0, 0], [0, 0, 0]], winner: 0, error: null },
+        { grid: [[1, 0, 0], [1, 0, 0], [1, 0, 0]], winner: 1, error: null },
+        { grid: [[2, 0, 0], [1, 2, 1], [1, 0, 2]], winner: 2, error: null },
+    ];
+
     const tictactoe: Tictactoe = new TictactoeController();
 
-    tictactoe.setGrid([[0, 1, 2],
-                       [0, 1, 2],
-                       [0, 1, 2]]);
+    it("Should give the expected winner for each case", () => {
+        ValidCases.forEach((currentWinnerAnalizerCase: WinnerAnilizerCase) => {
+            tictactoe.setGrid(currentWinnerAnalizerCase.grid);
 
-    expect(() => tictactoe.getWinner()).toThrow("Invalid board configuration");
-
-    tictactoe.setGrid([[1, 0, 2],
-                       [1, 1, 2],
-                       [1, 0, 0]]);
-
-    expect(tictactoe.getWinner()).toBe(0);
+            expect(currentWinnerAnalizerCase.error).toBe(null);
+            expect(tictactoe.currentWinner())
+                .toBe(currentWinnerAnalizerCase.winner);
+        });
+    });
 });
