@@ -9,7 +9,7 @@ type CellPosition = {
     col: number;
 };
 
-interface TictactoeProps {
+type TictactoeProps = {
     grid: number[][];
 };
 
@@ -43,13 +43,13 @@ export default class TictactoeController {
         this.props.grid = grid;
     }
 
-    public getWinner(): number {
+    public currentWinner(): number {
         type PositionAndDirectionCheck = {
             position: CellPosition;
             direction: number;
         };
 
-        const analizeCells: PositionAndDirectionCheck[] = [
+        const analizingCellsData: PositionAndDirectionCheck[] = [
             { position: { row: 0, col: 0 }, direction: -1 },
             { position: { row: 0, col: 1 }, direction:  6 },
             { position: { row: 0, col: 2 }, direction: -1 },
@@ -57,12 +57,12 @@ export default class TictactoeController {
             { position: { row: 2, col: 2 }, direction: -1 },
         ];
 
-        let currentCell: PositionAndDirectionCheck
+        let currentCellData: PositionAndDirectionCheck
         let winner: number = 0;
 
-        for (currentCell of analizeCells) {
+        for (currentCellData of analizingCellsData) {
             const result: number =
-                this.checkWinnerByPos(currentCell.position, currentCell.direction);
+                this.checkWinnerByPos(currentCellData.position, currentCellData.direction);
 
             if (winner !== 0 && result !== 0)
                 throw new WinnerAnalizerError("Invalid board configuration");
@@ -74,8 +74,8 @@ export default class TictactoeController {
     }
 
     private listCellNeighbors(row: number, col: number): NeighborsArray {
-        const isValueValid = (val: number) =>
-            val >= 0 && val < 3;
+        const isValueValid = (value: number) =>
+            value >= 0 && value < 3;
 
         const neighbors: CellPosition[] = [
             { row: row - 1, col: col - 1 },
@@ -88,8 +88,8 @@ export default class TictactoeController {
             { row: row + 1, col: col + 1 },
         ];
 
-        return neighbors.map((pos: CellPosition) =>
-            isValueValid(pos.row) && isValueValid(pos.col) ?  pos : null);
+        return neighbors.map((pos: CellPosition) => isValueValid(pos.row) &&
+            isValueValid(pos.col) ?  pos : null);
     }
 
     private checkWinnerByPos(position: CellPosition, direction: number = -1): number {

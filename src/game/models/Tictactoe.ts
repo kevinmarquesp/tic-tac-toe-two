@@ -1,5 +1,5 @@
-export interface Tictactoe {
+export default interface Tictactoe {
     getGrid(): number[][]
     setGrid(grid: number[][]): void
-    getWinner(): number
+    currentWinner(): number
 }
