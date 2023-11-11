@@ -144,7 +144,7 @@ export default class TictactoeController {
                 .InvalidGridError.GRID_ROWS_AMOUNT_MISSMATCH);
 
         grid.forEach((selectedRow: any) => {
-            if (!selectedRow.isArray())
+            if (Object.prototype.toString.call(selectedRow) !== "[object Array]")
                 throw new InvalidGridError(ErrorsDictionary.Tictactoe
                     .InvalidGridError.ROW_TYPE_MISSMATCH);
             
