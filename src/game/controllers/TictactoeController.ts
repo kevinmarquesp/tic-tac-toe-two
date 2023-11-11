@@ -26,13 +26,6 @@ export default class TictactoeController {
         return this.props.grid;
     }
 
-    public setGrid(grid: number[][]): void {
-        this.validateGridRowsOrThrow(grid);
-        this.validateGridCellValuesOrThrow(grid);
-
-        this.props.grid = grid;
-    }
-
     public getCell(row: number, col: number): number {
         this.validateGridRowsOrThrow();
         
@@ -41,6 +34,13 @@ export default class TictactoeController {
 
         this.validateCellValueOrThrow(cellValue);
         return cellValue;
+    }
+
+    public setGrid(grid: number[][]): void {
+        this.validateGridRowsOrThrow(grid);
+        this.validateGridCellValuesOrThrow(grid);
+
+        this.props.grid = grid;
     }
 
     public getWinner(): number {
@@ -71,40 +71,6 @@ export default class TictactoeController {
         }
 
         return winner;
-    }
-
-    private validateGridRowsOrThrow(grid: any = this.props.grid): void {
-        if (grid.length !== 3)
-            throw new InvalidGridError(ErrorsDictionary.Tictactoe
-                .InvalidGridError.GRID_ROWS_AMOUNT_MISSMATCH);
-
-        grid.forEach((selectedRow: any) => {
-            if (!selectedRow.isArray())
-                throw new InvalidGridError(ErrorsDictionary.Tictactoe
-                    .InvalidGridError.ROW_TYPE_MISSMATCH);
-            
-            if (selectedRow.length !== 3)
-                throw new InvalidGridError(ErrorsDictionary.Tictactoe
-                    .InvalidGridError.ROW_SIZE_MISSMATCH);
-        });
-    }
-
-    private validateGridCellValuesOrThrow(grid: any[][] = this.props.grid): void {
-        grid.forEach((selectedRow: any[]) => {
-            selectedRow.forEach((cellValue: any) => {
-                this.validateCellValueOrThrow(cellValue);
-            });
-        });
-    }
-
-    private validateCellValueOrThrow(cellValue: any): void {
-        if (typeof cellValue !== "number")
-            throw new InvalidGridValueError(ErrorsDictionary.Tictactoe
-                .InvalidGridValueError.GRID_VALUES_TYPE_MISSMATCH);
-
-        if (cellValue < 0 || cellValue > 2)
-            throw new InvalidGridValueError(ErrorsDictionary.Tictactoe
-                .InvalidGridValueError.GRID_VALUES_OUT_OF_RANGE);
     }
 
     private listCellNeighbors(row: number, col: number): NeighborsArray {
@@ -166,5 +132,39 @@ export default class TictactoeController {
         }
 
         return 0;
+    }
+
+    private validateGridRowsOrThrow(grid: any = this.props.grid): void {
+        if (grid.length !== 3)
+            throw new InvalidGridError(ErrorsDictionary.Tictactoe
+                .InvalidGridError.GRID_ROWS_AMOUNT_MISSMATCH);
+
+        grid.forEach((selectedRow: any) => {
+            if (!selectedRow.isArray())
+                throw new InvalidGridError(ErrorsDictionary.Tictactoe
+                    .InvalidGridError.ROW_TYPE_MISSMATCH);
+            
+            if (selectedRow.length !== 3)
+                throw new InvalidGridError(ErrorsDictionary.Tictactoe
+                    .InvalidGridError.ROW_SIZE_MISSMATCH);
+        });
+    }
+
+    private validateGridCellValuesOrThrow(grid: any[][] = this.props.grid): void {
+        grid.forEach((selectedRow: any[]) => {
+            selectedRow.forEach((cellValue: any) => {
+                this.validateCellValueOrThrow(cellValue);
+            });
+        });
+    }
+
+    private validateCellValueOrThrow(cellValue: any): void {
+        if (typeof cellValue !== "number")
+            throw new InvalidGridValueError(ErrorsDictionary.Tictactoe
+                .InvalidGridValueError.GRID_VALUES_TYPE_MISSMATCH);
+
+        if (cellValue < 0 || cellValue > 2)
+            throw new InvalidGridValueError(ErrorsDictionary.Tictactoe
+                .InvalidGridValueError.GRID_VALUES_OUT_OF_RANGE);
     }
 }
