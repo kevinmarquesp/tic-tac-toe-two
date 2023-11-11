@@ -1,8 +1,8 @@
-import Tictactoe from "../src/game/controllers/Tictactoe";
-import { ITictactoe } from "../src/game/models/Interfaces";
+import TictactoeController from "../src/game/controllers/TictactoeController";
+import { Tictactoe } from "../src/game/models/Tictactoe";
 
 test("Counting the grid elements", () => {
-    const tictactoe: ITictactoe = new Tictactoe();
+    const tictactoe: Tictactoe = new TictactoeController();
     const grid: number[][] = tictactoe.getGrid();
 
     expect(grid.length).toBe(3);
@@ -16,7 +16,7 @@ test("Counting the grid elements", () => {
 });
 
 test("Writing a new grid to the board object", () => {
-    const tictactoe: ITictactoe = new Tictactoe();
+    const tictactoe: Tictactoe = new TictactoeController();
 
     tictactoe.setGrid(new Array(3)
         .fill(new Array(3).fill(1)));
@@ -29,7 +29,7 @@ test("Writing a new grid to the board object", () => {
 });
 
 test("Writing an invalid grid to the board object", () => {
-    const tictactoe: ITictactoe = new Tictactoe();
+    const tictactoe: Tictactoe = new TictactoeController();
 
     [1, 2, 4].forEach((i: number) => {
         expect(() => tictactoe.setGrid(new Array(3)
@@ -49,7 +49,7 @@ test("Writing an invalid grid to the board object", () => {
 });
 
 test("Getting the winner given the current grid state", () => {
-    const tictactoe: ITictactoe = new Tictactoe();
+    const tictactoe: Tictactoe = new TictactoeController();
 
     tictactoe.setGrid([[0, 1, 2],
                        [0, 1, 2],

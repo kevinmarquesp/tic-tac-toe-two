@@ -1,4 +1,4 @@
-import { InvalidGridError, WinnerAnalizerError } from "../errors/Tictactoe";
+import { InvalidGridError, WinnerAnalizerError } from "../errors/TictactoeErrors";
 
 type NeighborsArray = Array<CellPosition | null>;
 type None = null | undefined;
@@ -8,7 +8,7 @@ type CellPosition = {
     col: number;
 };
 
-export default class Tictactoe {
+export default class TictactoeController {
     private _grid: number[][] = new Array(3)
         .fill(new Array(3).fill(0));
 
