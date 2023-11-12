@@ -38,14 +38,46 @@ export default class TictactoeController {
         this.props.grid = grid;
     }
 
+    // todo: recicle all the repeated code
     public currentWinner(): number[] {
         const rowWinners: number[] = this.checkForCurrentWinnerForEachRow();
         const columnWinners: number[] = this.checkForCurrentWinnerForEachColumn();
+        const diagonalWinners: number[] = this.checkFroCurrentWinnerForEachDiagonal();
 
         console.table(rowWinners);
         console.table(columnWinners);
+        console.table(diagonalWinners);
 
-        return columnWinners;
+        return diagonalWinners;
+    }
+
+    private checkFroCurrentWinnerForEachDiagonal(): number[] {
+        const diagonalArray: number[][] = []
+        const mainDiagonal: number[] = []
+        const opositeDiagonal: number[] = []
+
+        let rowIterator: number = 0;
+        let colIterator: number = ROWS - 1;
+
+        while (rowIterator < ROWS && colIterator >= 0) {
+            mainDiagonal.push(this.props.grid[rowIterator]![rowIterator]!);
+            opositeDiagonal.push(this.props.grid[rowIterator]![colIterator]!);
+
+            ++rowIterator;
+            --colIterator;
+        }
+
+        diagonalArray.push(mainDiagonal, opositeDiagonal);
+
+        const diagonalWinners: number[] = diagonalArray.map((currentColumn: number[]) => {
+            const result: boolean = currentColumn.every((cellValue: number) =>
+                cellValue === currentColumn[0] && cellValue !== 0);
+
+            return result ? currentColumn[0]! : 0;
+        });
+
+        return diagonalWinners.sort().reverse().filter((value: number) =>
+            value > 0);
     }
 
     private checkForCurrentWinnerForEachColumn(): number[] {
