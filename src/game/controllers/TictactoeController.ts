@@ -44,11 +44,7 @@ export default class TictactoeController {
         const columnWinners: number[] = this.checkForCurrentWinnerForEachColumn();
         const diagonalWinners: number[] = this.checkFroCurrentWinnerForEachDiagonal();
 
-        console.table(rowWinners);
-        console.table(columnWinners);
-        console.table(diagonalWinners);
-
-        return diagonalWinners;
+        return [...new Set([...rowWinners, ...columnWinners, ...diagonalWinners])];
     }
 
     private checkFroCurrentWinnerForEachDiagonal(): number[] {

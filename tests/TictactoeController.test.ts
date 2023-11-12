@@ -104,16 +104,16 @@ describe("The current winner based on the internal grid values and positions", (
         winner: number[];
     };
 
-    // const RowWinnerCases: WinnerAnilizerCase[] = [
-    //     { grid: [[0, 0, 0], [0, 0, 0], [0, 0, 0]], winner: [ ] },
-    //     { grid: [[1, 1, 1], [0, 0, 0], [0, 0, 0]], winner: [1] },
-    //     { grid: [[0, 0, 0], [0, 0, 0], [2, 2, 2]], winner: [2] },
-    // ];
+    const RowWinnerCases: WinnerAnilizerCase[] = [
+        { grid: [[0, 0, 0], [0, 0, 0], [0, 0, 0]], winner: [ ] },
+        { grid: [[1, 1, 1], [0, 0, 0], [0, 0, 0]], winner: [1] },
+        { grid: [[0, 0, 0], [0, 0, 0], [2, 2, 2]], winner: [2] },
+    ];
 
-    // const ColumnWinnerCases: WinnerAnilizerCase[] = [
-    //     { grid: [[1, 0, 0], [1, 0, 0], [1, 0, 0]], winner: [1] },
-    //     { grid: [[1, 2, 0], [0, 2, 1], [1, 2, 0]], winner: [2] },
-    // ];
+    const ColumnWinnerCases: WinnerAnilizerCase[] = [
+        { grid: [[1, 0, 0], [1, 0, 0], [1, 0, 0]], winner: [1] },
+        { grid: [[1, 2, 0], [0, 2, 1], [1, 2, 0]], winner: [2] },
+    ];
 
     const DiagonalWinnerCases: WinnerAnilizerCase[] = [
         { grid: [[1, 0, 0], [0, 1, 0], [0, 0, 1]], winner: [1] },
@@ -122,23 +122,23 @@ describe("The current winner based on the internal grid values and positions", (
 
     const tictactoe: Tictactoe = new TictactoeController();
 
-    // it("Should give the expected winner for each filled row", () => {
-    //     RowWinnerCases.forEach((currentWinnerAnalizerCase: WinnerAnilizerCase) => {
-    //         tictactoe.setGrid(currentWinnerAnalizerCase.grid);
+    it("Should give the expected winner for each filled row", () => {
+        RowWinnerCases.forEach((currentWinnerAnalizerCase: WinnerAnilizerCase) => {
+            tictactoe.setGrid(currentWinnerAnalizerCase.grid);
 
-    //         expect(tictactoe.currentWinner())
-    //             .toStrictEqual(currentWinnerAnalizerCase.winner);
-    //     });
-    // });
+            expect(tictactoe.currentWinner())
+                .toStrictEqual(currentWinnerAnalizerCase.winner);
+        });
+    });
 
-    // it("Should give the expected winner for each filled column", () => {
-    //     ColumnWinnerCases.forEach((currentWinnerAnalizerCase: WinnerAnilizerCase) => {
-    //         tictactoe.setGrid(currentWinnerAnalizerCase.grid);
+    it("Should give the expected winner for each filled column", () => {
+        ColumnWinnerCases.forEach((currentWinnerAnalizerCase: WinnerAnilizerCase) => {
+            tictactoe.setGrid(currentWinnerAnalizerCase.grid);
 
-    //         expect(tictactoe.currentWinner())
-    //             .toStrictEqual(currentWinnerAnalizerCase.winner);
-    //     });
-    // })
+            expect(tictactoe.currentWinner())
+                .toStrictEqual(currentWinnerAnalizerCase.winner);
+        });
+    })
 
     it("Should give the expected winner for each filled diagonal", () => {
         DiagonalWinnerCases.forEach((currentWinnerAnalizerCase: WinnerAnilizerCase) => {
