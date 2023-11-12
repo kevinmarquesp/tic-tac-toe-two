@@ -39,7 +39,36 @@ export default class TictactoeController {
     }
 
     public currentWinner(): number[] {
-        return this.checkForCurrentWinnerForEachRow();
+        const rowWinners: number[] = this.checkForCurrentWinnerForEachRow();
+        const columnWinners: number[] = this.checkForCurrentWinnerForEachColumn();
+
+        console.table(rowWinners);
+        console.table(columnWinners);
+
+        return columnWinners;
+    }
+
+    private checkForCurrentWinnerForEachColumn(): number[] {
+        const columnsArray: number[][] = [];
+
+        for (let i = 0; i < COLS; ++i) {
+            const currentColumn: number[] = [];
+
+            this.props.grid.forEach((currentRow: number[]) =>
+                currentColumn.push(currentRow[i]!));
+
+            columnsArray.push(currentColumn);
+        }
+
+        const columnWinners: number[] = columnsArray.map((currentColumn: number[]) => {
+            const result: boolean = currentColumn.every((cellValue: number) =>
+                cellValue === currentColumn[0] && cellValue !== 0);
+
+            return result ? currentColumn[0]! : 0;
+        });
+
+        return columnWinners.sort().reverse().filter((value: number) =>
+            value > 0);
     }
 
     private checkForCurrentWinnerForEachRow(): number[] {
@@ -55,7 +84,7 @@ export default class TictactoeController {
     }
 
     private validateGridRowsOrThrow(grid: any = this.props.grid): void {
-        if (grid.length !== 3)
+        if (grid.length !== ROWS)
             throw new InvalidGridError(ErrorsDictionary.Tictactoe
                 .InvalidGridError.GRID_ROWS_AMOUNT_MISSMATCH);
 
@@ -64,7 +93,7 @@ export default class TictactoeController {
                 throw new InvalidGridError(ErrorsDictionary.Tictactoe
                     .InvalidGridError.ROW_TYPE_MISSMATCH);
             
-            if (selectedRow.length !== 3)
+            if (selectedRow.length !== COLS)
                 throw new InvalidGridError(ErrorsDictionary.Tictactoe
                     .InvalidGridError.ROW_SIZE_MISSMATCH);
         });
