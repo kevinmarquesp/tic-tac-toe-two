@@ -1,13 +1,5 @@
-import { InvalidGridError, InvalidGridValueError, WinnerAnalizerError } from "../errors/TictactoeErrors";
+import { InvalidGridError, InvalidGridValueError } from "../errors/TictactoeErrors";
 import ErrorsDictionary from "../ErrorsDictionary";
-
-type NeighborsArray = Array<CellPosition | null>;
-type None = null | undefined;
-
-type CellPosition = {
-    row: number;
-    col: number;
-};
 
 type TictactoeProps = {
     grid: number[][];
@@ -46,96 +38,16 @@ export default class TictactoeController {
         this.props.grid = grid;
     }
 
+    // todo: separate that logic to a listRowWinners method
     public currentWinner(): number {
-        type PositionAndDirectionCheck = {
-            position: CellPosition;
-            direction: number;
-        };
+        const rowWinners: number[] = this.props.grid.map((currentRow: number[]) => {
+            const result: boolean = currentRow.every((cellValue: number) =>
+                cellValue === currentRow[0] && cellValue !== 0);
 
-        const analizingCellsData: PositionAndDirectionCheck[] = [
-            { position: { row: 0, col: 0 }, direction: -1 },
-            { position: { row: 0, col: 1 }, direction:  6 },
-            { position: { row: 0, col: 2 }, direction: -1 },
-            { position: { row: 1, col: 0 }, direction:  4 },
-            { position: { row: 2, col: 2 }, direction: -1 },
-        ];
+            return result ? currentRow[0]! : 0;
+        });
 
-        let currentCellData: PositionAndDirectionCheck
-        let winner: number = 0;
-
-        for (currentCellData of analizingCellsData) {
-            const result: number =
-                this.checkWinnerByPos(currentCellData.position, currentCellData.direction);
-
-            if (winner !== 0 && result !== 0)
-                throw new WinnerAnalizerError(ErrorsDictionary.Tictactoe
-                    .WinnerAnalizerError.INVALID_GRID_FORMATION);
-                
-            winner = result;
-        }
-
-        return winner;
-    }
-
-    private listCellNeighbors(row: number, col: number): NeighborsArray {
-        const isValueValid = (value: number) =>
-            value >= 0 && value < 3;
-
-        const neighbors: CellPosition[] = [
-            { row: row - 1, col: col - 1 },
-            { row: row - 1, col: col     },
-            { row: row - 1, col: col + 1 },
-            { row: row,     col: col - 1 },
-            { row: row,     col: col + 1 },
-            { row: row + 1, col: col - 1 },
-            { row: row + 1, col: col     },
-            { row: row + 1, col: col + 1 },
-        ];
-
-        return neighbors.map((pos: CellPosition) => isValueValid(pos.row) &&
-            isValueValid(pos.col) ?  pos : null);
-    }
-
-    private checkWinnerByPos(position: CellPosition, direction: number = -1): number {
-        const value: number = this.getCell(position.row, position.col);
-        const neighbors: NeighborsArray = this.listCellNeighbors(position.row, position.col)
-
-        let neighborPosition: CellPosition | None;
-        let neighborValue: number;
-        let nextDirection: number;  // in fact, this is the neighbor's index
-
-        if (direction < 0) {  // -1 means that it's the begining of the algorithm
-            for ([nextDirection, neighborPosition] of neighbors.entries()) {
-                if (neighborPosition === null)
-                    continue;
-
-                neighborValue = this.getCell(neighborPosition.row, neighborPosition.col);
-            
-                if (value === neighborValue)
-                    return this.checkWinnerByPos(neighborPosition, nextDirection);
-            }
-
-        } else if (direction >= 0 && direction < 8) {  // when it's the seccond or the third movement
-            neighborPosition = neighbors[direction];
-
-            if (neighborPosition === undefined)
-                throw new WinnerAnalizerError(ErrorsDictionary.Tictactoe
-                    .WinnerAnalizerError.UNDEFINED_NEIGHBOR_POSITION);
-
-            if (neighborPosition === null)  // this means that it already reached the end of the board
-                return value;
-
-            neighborValue = this.getCell(neighborPosition.row, neighborPosition.col);
-
-            if (value === neighborValue)
-                return this.checkWinnerByPos(neighborPosition, direction);
-
-        } else {
-            throw new WinnerAnalizerError(ErrorsDictionary.Tictactoe
-                .WinnerAnalizerError.INVALID_DIRECTION);
-        }
-
-        return 0;
+        return rowWinners.sort().reverse()[0]!;
     }
 
     private validateGridRowsOrThrow(grid: any = this.props.grid): void {

@@ -107,8 +107,8 @@ describe("The current winner based on the internal grid values and positions", (
 
     const ValidCases: WinnerAnilizerCase[] = [
         { grid: [[0, 0, 0], [0, 0, 0], [0, 0, 0]], winner: 0, error: null },
-        { grid: [[1, 0, 0], [1, 0, 0], [1, 0, 0]], winner: 1, error: null },
-        { grid: [[2, 0, 0], [1, 2, 1], [1, 0, 2]], winner: 2, error: null },
+        { grid: [[1, 1, 1], [0, 0, 0], [0, 0, 0]], winner: 1, error: null },
+        { grid: [[0, 0, 0], [0, 0, 0], [2, 2, 2]], winner: 2, error: null },
     ];
 
     const tictactoe: Tictactoe = new TictactoeController();
