@@ -101,25 +101,23 @@ describe("What happens when asigning a new tictactoe board array", () => {
 describe("The current winner based on the internal grid values and positions", () => {
     type WinnerAnilizerCase = {
         grid: number[][];
-        winner: number;
-        error: string | null;
+        winner: number[];
     };
 
-    const ValidCases: WinnerAnilizerCase[] = [
-        { grid: [[0, 0, 0], [0, 0, 0], [0, 0, 0]], winner: 0, error: null },
-        { grid: [[1, 1, 1], [0, 0, 0], [0, 0, 0]], winner: 1, error: null },
-        { grid: [[0, 0, 0], [0, 0, 0], [2, 2, 2]], winner: 2, error: null },
+    const RowWinnerCases: WinnerAnilizerCase[] = [
+        { grid: [[0, 0, 0], [0, 0, 0], [0, 0, 0]], winner: []  },
+        { grid: [[1, 1, 1], [0, 0, 0], [0, 0, 0]], winner: [1] },
+        { grid: [[0, 0, 0], [0, 0, 0], [2, 2, 2]], winner: [2] },
     ];
 
     const tictactoe: Tictactoe = new TictactoeController();
 
-    it("Should give the expected winner for each case", () => {
-        ValidCases.forEach((currentWinnerAnalizerCase: WinnerAnilizerCase) => {
+    it("Should give the expected winner for each filled row", () => {
+        RowWinnerCases.forEach((currentWinnerAnalizerCase: WinnerAnilizerCase) => {
             tictactoe.setGrid(currentWinnerAnalizerCase.grid);
 
-            expect(currentWinnerAnalizerCase.error).toBe(null);
             expect(tictactoe.currentWinner())
-                .toBe(currentWinnerAnalizerCase.winner);
+                .toStrictEqual(currentWinnerAnalizerCase.winner);
         });
     });
 });

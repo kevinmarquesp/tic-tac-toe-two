@@ -38,8 +38,11 @@ export default class TictactoeController {
         this.props.grid = grid;
     }
 
-    // todo: separate that logic to a listRowWinners method
-    public currentWinner(): number {
+    public currentWinner(): number[] {
+        return this.checkForCurrentWinnerForEachRow();
+    }
+
+    private checkForCurrentWinnerForEachRow(): number[] {
         const rowWinners: number[] = this.props.grid.map((currentRow: number[]) => {
             const result: boolean = currentRow.every((cellValue: number) =>
                 cellValue === currentRow[0] && cellValue !== 0);
@@ -47,7 +50,8 @@ export default class TictactoeController {
             return result ? currentRow[0]! : 0;
         });
 
-        return rowWinners.sort().reverse()[0]!;
+        return rowWinners.sort().reverse().filter((value: number) =>
+            value > 0);
     }
 
     private validateGridRowsOrThrow(grid: any = this.props.grid): void {
